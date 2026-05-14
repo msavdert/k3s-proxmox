@@ -7,7 +7,7 @@ This document defines the absolute source of truth for the entire K3s cluster in
 - **Network Boundary:** Dedicated SDN VNet (`k3snet`) within the `localnat` zone.
 - **Subnet:** `10.0.1.0/24` (Gateway: `10.0.1.1`, SNAT enabled).
 - **VM Provisioning:** Proxmox CLI (`qm create`, `qm clone`, Cloud-Init).
-- **Operating System:** Ubuntu 24.04 Cloud Image (`qemu-guest-agent` installed and enabled).
+- **Operating System:** Ubuntu 24.04 Cloud Image (`qemu-guest-agent` installed via Cloud-Init snippets).
 
 ## 2. Node Topology
 The cluster consists of 1 Control Plane node and 3 Worker nodes.

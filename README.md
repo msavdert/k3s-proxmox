@@ -14,6 +14,7 @@ The guide is designed for homelab enthusiasts and professionals who want to unde
 - [Chapter 5: Networking & Ingress (Cilium & Gateway API)](docs/05-networking-and-ingress.md)
 - [Chapter 6: Storage Classes (Longhorn)](docs/06-storage-classes.md)
 - [Chapter 7: GitOps & Observability (ArgoCD & ESO)](docs/07-gitops-and-monitoring.md)
+- [Chapter 99: Cleanup and Reset](docs/99-cleanup.md)
 
 ## 🛠️ Prerequisites
 

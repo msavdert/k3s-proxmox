@@ -15,34 +15,55 @@ curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 ```bash
 helm repo add cilium https://helm.cilium.io/
 helm repo update
+
+# Check for the latest versions
+helm search repo cilium/cilium -l | head -n 5
 ```
 
-## 3. Install Cilium
+> [!NOTE]
+> **Chart Version** is the version of the Helm package, while **App Version** is the Cilium software version. They are usually identical for Cilium.
 
-We will install Cilium with the following configuration:
-- `kubeProxyReplacement=true`: Replaces `kube-proxy` with eBPF for better performance and security.
-- `l2announcements.enabled=true`: Allows Cilium to announce LoadBalancer IPs via ARP.
-- `gatewayAPI.enabled=true`: Enables the Kubernetes Gateway API support.
+## 2.1 Install Gateway API CRDs
+The Kubernetes Gateway API is not installed by default. You must install the CRDs **before** installing Cilium:
 
 ```bash
-helm install cilium cilium/cilium --version 1.16.x \
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/experimental-install.yaml --server-side=true
+```
+
+## 3. Install Cilium & Hubble
+
+We will install Cilium with eBPF-based kube-proxy replacement and enable **Hubble** for network observability.
+
+```bash
+helm install cilium cilium/cilium --version 1.19.4 \
   --namespace kube-system \
   --set kubeProxyReplacement=true \
   --set k8sServiceHost=10.0.1.10 \
   --set k8sServicePort=6443 \
+  --set ipam.mode=kubernetes \
   --set l2announcements.enabled=true \
   --set gatewayAPI.enabled=true \
+  --set hubble.enabled=true \
+  --set hubble.relay.enabled=true \
+  --set hubble.ui.enabled=true \
   --set operator.replicas=1
+```
+
+**Check Status (Wait for ALL pods to be Ready)**
+
+```bash
+kubectl -n kube-system get pods -l k8s-app=cilium
+
+cilium status --wait
 ```
 
 ## 4. Configure L2 Announcements Pool
 
-Now we define the IP pool that Cilium will use for LoadBalancer services. We will use a range from our `k3snet` subnet.
+Now we define the IP pool that Cilium will use for LoadBalancer services. We will use a range from our `k3snet` subnet. Run this on your **local machine**:
 
-Create a file named `cilium-l2-pool.yaml`:
-
-```yaml
-apiVersion: cilium.io/v2alpha1
+```bash
+cat <<EOF | kubectl apply -f -
+apiVersion: cilium.io/v2
 kind: CiliumLoadBalancerIPPool
 metadata:
   name: local-pool
@@ -56,28 +77,28 @@ metadata:
   name: default-l2-policy
 spec:
   interfaces:
-    - ^eth0$
+    - ^eth[0-9]+
   loadBalancerIPs: true
-```
-
-Apply the configuration:
-```bash
-kubectl apply -f cilium-l2-pool.yaml
+EOF
 ```
 
 ## 5. Verify Networking
-
-Wait for all Cilium pods to be ready:
-
-```bash
-kubectl -n kube-system get pods -l k8s-app=cilium
-```
 
 Check that all nodes are now in the `Ready` state:
 
 ```bash
 kubectl get nodes
 ```
+
+## 6. Accessing Hubble UI
+Once Cilium is ready, you can access the Hubble UI to visualize your network traffic:
+
+```bash
+# Start the port-forward from your local machine
+kubectl port-forward -n kube-system svc/hubble-ui 12000:80
+```
+
+Open your browser and navigate to `http://localhost:12000`.
 
 ---
 

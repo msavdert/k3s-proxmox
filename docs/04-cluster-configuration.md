@@ -23,7 +23,11 @@ with:
 
 Or use `sed`:
 ```bash
+# On Linux:
 sed -i 's/127.0.0.1/10.0.1.10/g' ~/.kube/k3s-proxmox.yaml
+
+# On macOS:
+sed -i '' 's/127.0.0.1/10.0.1.10/g' ~/.kube/k3s-proxmox.yaml
 ```
 
 ## 3. Configure Local Environment

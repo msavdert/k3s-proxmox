@@ -46,8 +46,12 @@ packages:
   - qemu-guest-agent
   - nfs-common
   - open-iscsi
+  - dmsetup
+  - jq
+  - curl
 runcmd:
   - systemctl enable --now qemu-guest-agent
+  - systemctl enable --now iscsid
 EOF
 ```
 
@@ -169,23 +173,32 @@ qm set $WORKER3_ID --scsi1 local-zfs:vm-$WORKER3_ID-disk-1
 qm set $WORKER3_ID --ipconfig0 ip=10.0.1.13/24,gw=10.0.1.1
 ```
 
-## 6. Start the VMs
+## 6. Start and Initialize Identity
 
-Once all nodes are provisioned, start them using their respective variables:
+Once all nodes are provisioned, start them. We will then use the **QEMU Guest Agent** (`qm guest exec`) to set their hostnames automatically from the Proxmox host.
 
 ```bash
+# Start all VMs
 qm start $MASTER_ID
 qm start $WORKER1_ID
 qm start $WORKER2_ID
 qm start $WORKER3_ID
 ```
 
-# CLEANUP: Remove the public key file
-rm k3s.pub
-
 > [!TIP]
 > You can monitor the Cloud-Init progress by connecting to the serial console of the master:
 > `qm terminal $MASTER_ID`
+
+```bash
+# Wait 10-20 seconds for the Guest Agent to start, then set hostnames:
+qm guest exec $MASTER_ID -- hostnamectl set-hostname k3s-master-1
+qm guest exec $WORKER1_ID -- hostnamectl set-hostname k3s-worker-1
+qm guest exec $WORKER2_ID -- hostnamectl set-hostname k3s-worker-2
+qm guest exec $WORKER3_ID -- hostnamectl set-hostname k3s-worker-3
+```
+
+> [!TIP]
+> Using `qm guest exec` allows us to finalize the node identity without needing to SSH into each machine manually. This is perfect for the "Hard Way" automation.
 
 ---
 

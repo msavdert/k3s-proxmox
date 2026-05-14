@@ -10,6 +10,22 @@ SSH into the master node using the user we configured via Cloud-Init:
 ssh k3sadmin@10.0.1.10
 ```
 
+> [!NOTE]
+> Your hostname should already be set to `k3s-master-1` thanks to the `qm guest exec` command we ran at the end of the previous chapter.
+
+### 1.1 System Preparation
+
+Before installing K3s, we must ensure the system meets the official requirements regarding networking and swap.
+
+```bash
+# Disable UFW (Uncomplicated Firewall) to prevent port blocking
+sudo ufw disable
+
+# Disable Swap (Recommended for Kubernetes stability)
+sudo swapoff -a
+sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+```
+
 ## 2. Install K3s (Single Master)
 
 We will use the official K3s installation script. We are explicitly disabling:
@@ -51,8 +67,8 @@ kubectl get nodes
 
 Output should look like:
 ```text
-NAME           STATUS     ROLES                  AGE   VERSION
-k3s-master-1   NotReady   control-plane,master   10s   v1.30.x+k3s1
+NAME           STATUS     ROLES           AGE   VERSION
+k3s-master-1   NotReady   control-plane   12s   v1.35.4+k3s1
 ```
 
 ## 4. Retrieve the Cluster Token

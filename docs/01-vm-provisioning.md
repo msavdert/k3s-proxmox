@@ -14,27 +14,33 @@ Log in to your Proxmox host via SSH. We will download the Ubuntu Cloud Image to 
 wget https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img
 ```
 
-## 2. Prepare SSH Credentials
-
-Before configuring the template, you need an SSH key pair. If you don't have one, generate a modern **Ed25519** key:
-
-```bash
-# Generate a new SSH key pair (Run this on your LOCAL machine or Proxmox host)
-ssh-keygen -t ed25519 -C "k3s-proxmox-key" -f id_ed25519_k3s
-```
-Your public key will be in `id_ed25519_k3s.pub`. You will need its content in the next step.
-
 ## 3. Create a Cloud-Init Custom Snippet
 
-We will use a **Snippet**. Snippets are custom configuration files stored in `/var/lib/vz/snippets/`. They allow us to extend Cloud-Init beyond the basic GUI options, such as installing packages on the first boot.
+We will use a **Snippet** to handle all configurations. 
 
+> [!IMPORTANT]
+> When using `--cicustom`, Proxmox's standard `--ciuser` and `--cipassword` commands are ignored. We must define everything inside the snippet.
+
+First, generate a hashed password for security:
+```bash
+openssl passwd -6
+```
+Copy the output hash (it looks like `$6$rounds=...`).
+
+Now create the configuration:
 ```bash
 # Create the snippets directory if it doesn't exist
 mkdir -p /var/lib/vz/snippets
 
 # Create the custom configuration
-cat << EOF > /var/lib/vz/snippets/k3s-cloud-init.yaml
+cat << 'EOF' > /var/lib/vz/snippets/k3s-cloud-init.yaml
 #cloud-config
+user: k3sadmin
+password: <YOUR_HASHED_PASSWORD>
+chpasswd: { expire: False }
+ssh_authorized_keys:
+  - <YOUR_SSH_PUBLIC_KEY_STRING>
+
 package_upgrade: true
 packages:
   - qemu-guest-agent
@@ -73,13 +79,6 @@ qm create 9000 --name ubuntu-2404-template --memory 2048 --cores 2 --net0 virtio
 
 # Enable the QEMU Guest Agent
 qm set 9000 --agent enabled=1
-
-# Configure Shared Cloud-Init Settings (Inherited by all clones)
-# Use the public key we generated (or your existing one)
-# If you generated a new one: cat id_ed25519_k3s.pub > k3s.pub
-# If you have one: echo "ssh-ed25519 ..." > k3s.pub
-qm set 9000 --ciuser k3sadmin --cipassword <YOUR_SECURE_PASSWORD> --sshkeys k3s.pub
-rm k3s.pub
 
 # Import the disk into Proxmox storage
 # REPLACE 'local-zfs' with the storage Name you found in the previous step

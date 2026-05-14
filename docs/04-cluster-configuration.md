@@ -48,4 +48,4 @@ kubectl get nodes
 ---
 
 > [!TIP]
-> If you are using Tailscale to access your Proxmox network, ensure that your Tailscale client is connected and the routes to `10.0.0.0/24` are accepted.
+> If you are using Tailscale to access your Proxmox network, ensure that your Tailscale client is connected and the routes to your networks (e.g., `10.0.0.0/24,10.0.1.0/24`) are accepted via the admin console and the `--advertise-routes` flag.

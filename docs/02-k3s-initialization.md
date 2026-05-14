@@ -1,6 +1,6 @@
 # Chapter 2: K3s Control-Plane Initialization
 
-In this chapter, we will initialize the Kubernetes control plane on our primary master node (`10.0.0.10`). According to our architecture blueprint, we will disable several default K3s components to replace them with more advanced alternatives later in the guide.
+In this chapter, we will initialize the Kubernetes control plane on our primary master node (`10.0.1.10`). According to our architecture blueprint, we will disable several default K3s components to replace them with more advanced alternatives later in the guide.
 
 ## 1. Connect to the Master Node
 

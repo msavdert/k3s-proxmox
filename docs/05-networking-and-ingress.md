@@ -48,7 +48,7 @@ metadata:
   name: local-pool
 spec:
   blocks:
-    - cidr: "10.0.1.200/29" # Range: 10.0.1.200 - 10.0.1.207
+    - cidr: "10.0.1.240/28" # Range: 10.0.1.240 - 10.0.1.254 (Outside DHCP range)
 ---
 apiVersion: cilium.io/v2alpha1
 kind: CiliumL2AnnouncementPolicy

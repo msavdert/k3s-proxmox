@@ -4,7 +4,7 @@ In this chapter, we will configure **Longhorn** as our distributed block storage
 
 ## 1. Prepare Secondary Disks (Workers only)
 
-On each worker node (`10.0.0.11`, `10.0.0.12`, `10.0.0.13`), we need to format and mount the secondary 100GB disk (`scsi1`).
+On each worker node (`10.0.1.11`, `10.0.1.12`, `10.0.1.13`), we need to format and mount the secondary 100GB disk (`scsi1`).
 
 ### Identify and Format the Disk
 
@@ -26,12 +26,12 @@ echo "/dev/sdb /var/lib/longhorn xfs defaults 0 0" | sudo tee -a /etc/fstab
 sudo mount -a
 ```
 
-## 2. Install Required Dependencies
+## 2. Verify Required Dependencies
 
-Longhorn requires `open-iscsi` and `nfs-common` to be installed on all nodes.
+Longhorn requires `open-iscsi` and `nfs-common` to be installed on all nodes. We already automated this via our Cloud-Init snippet in Chapter 1, but you can verify it:
 
 ```bash
-sudo apt update && sudo apt install -y open-iscsi nfs-common
+sudo dpkg -l | grep -E "open-iscsi|nfs-common"
 ```
 
 ## 3. Install Longhorn via Helm

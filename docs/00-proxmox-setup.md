@@ -268,6 +268,42 @@ SDN configurations remain in a "pending" state until explicitly applied. If you 
 
 _When creating a new VM, simply assign its network device to the `vnet0` bridge. It will automatically pull a `10.0.0.x` IP address, route through `10.0.0.1`, and securely access the internet._
 
+## Create dedicated SDN for K3s (Recommended)
+
+If you are running multiple clusters (e.g., a Talos cluster alongside this K3s cluster), it is best practice to isolate them using a separate VNet and Subnet. This prevents ARP conflicts (especially with Cilium L2 Announcements) and simplifies IP management.
+
+### Create the VNet (Virtual Switch)
+
+1. Navigate to **Datacenter > SDN > VNets**.
+2. Click **Create**.
+3. **Name:** `k3snet`
+4. **Zone:** Select the `localnat` zone.
+5. Click **Create**.
+
+### Define the Subnet and DHCP Range
+
+1. Select your newly created `k3snet` on the left side.
+2. Under **Subnets**, click **Create**.
+3. **Subnet:** `10.0.1.0/24`
+4. **Gateway:** `10.0.1.1`
+5. **SNAT:** **Check this box.**
+6. Switch to the **DHCP Ranges** tab.
+7. Click **Add**:
+    - **Start Address:** `10.0.1.100`
+    - **End Address:** `10.0.1.200`
+8. Click **Create**.
+
+### Apply the SDN Configuration
+
+1. Navigate back to **Datacenter > SDN**.
+2. Click **Apply**.
+
+Verify the new interface on the Proxmox host:
+```sh
+ip a show k3snet
+```
+You should see the `10.0.1.1/24` IP assigned to the `k3snet` bridge.
+
 ### Testing the connectivity
 
 Now we can create a CT to test the network connectivity.

@@ -7,7 +7,7 @@ In this chapter, we will initialize the Kubernetes control plane on our primary 
 SSH into the master node using the user we configured via Cloud-Init:
 
 ```bash
-ssh k3sadmin@10.0.0.10
+ssh k3sadmin@10.0.1.10
 ```
 
 ## 2. Install K3s (Single Master)
@@ -28,7 +28,7 @@ curl -sfL https://get.k3s.io | sh -s - server \
   --disable servicelb \
   --disable local-storage \
   --flannel-backend=none \
-  --node-ip=10.0.0.10 \
+  --node-ip=10.0.1.10 \
   --write-kubeconfig-mode 644
 ```
 

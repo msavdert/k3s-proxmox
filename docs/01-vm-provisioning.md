@@ -26,7 +26,7 @@ We will create a base VM template (ID `9000`) that all our cluster nodes will be
 
 ```bash
 # Create the VM
-qm create 9000 --name ubuntu-2404-template --memory 2048 --cores 2 --net0 virtio,bridge=vnet0
+qm create 9000 --name ubuntu-2404-template --memory 2048 --cores 2 --net0 virtio,bridge=k3snet
 
 # Import the disk to Proxmox storage (replace 'local-zfs' with your storage name)
 qm importdisk 9000 noble-server-cloudimg-amd64.img local-zfs
@@ -62,7 +62,7 @@ qm disk resize 100 scsi0 15G
 # Configure Cloud-Init
 # Replace <YOUR_PUBLIC_SSH_KEY> with your actual public key
 qm set 100 --ciuser k3sadmin --cipassword <YOUR_SECURE_PASSWORD> --sshkeys <YOUR_PUBLIC_SSH_KEY_FILE_OR_STRING>
-qm set 100 --ipconfig0 ip=10.0.0.10/24,gw=10.0.0.1
+qm set 100 --ipconfig0 ip=10.0.1.10/24,gw=10.0.1.1
 ```
 
 ## 4. Provision the Worker Nodes
@@ -78,7 +78,7 @@ qm disk resize 101 scsi0 20G
 # Replace 'local-zfs' with your target storage
 pvesm alloc local-zfs 101 vm-101-disk-1 100G
 qm set 101 --scsi1 local-zfs:vm-101-disk-1
-qm set 101 --ipconfig0 ip=10.0.0.11/24,gw=10.0.0.1
+qm set 101 --ipconfig0 ip=10.0.1.11/24,gw=10.0.1.1
 qm set 101 --ciuser k3sadmin --cipassword <YOUR_SECURE_PASSWORD> --sshkeys <YOUR_PUBLIC_SSH_KEY>
 ```
 
@@ -89,7 +89,7 @@ qm set 102 --memory 8192 --cores 2
 qm disk resize 102 scsi0 20G
 pvesm alloc local-zfs 102 vm-102-disk-1 100G
 qm set 102 --scsi1 local-zfs:vm-102-disk-1
-qm set 102 --ipconfig0 ip=10.0.0.12/24,gw=10.0.0.1
+qm set 102 --ipconfig0 ip=10.0.1.12/24,gw=10.0.1.1
 qm set 102 --ciuser k3sadmin --cipassword <YOUR_SECURE_PASSWORD> --sshkeys <YOUR_PUBLIC_SSH_KEY>
 ```
 
@@ -100,7 +100,7 @@ qm set 103 --memory 8192 --cores 2
 qm disk resize 103 scsi0 20G
 pvesm alloc local-zfs 103 vm-103-disk-1 100G
 qm set 103 --scsi1 local-zfs:vm-103-disk-1
-qm set 103 --ipconfig0 ip=10.0.0.13/24,gw=10.0.0.1
+qm set 103 --ipconfig0 ip=10.0.1.13/24,gw=10.0.1.1
 qm set 103 --ciuser k3sadmin --cipassword <YOUR_SECURE_PASSWORD> --sshkeys <YOUR_PUBLIC_SSH_KEY>
 ```
 

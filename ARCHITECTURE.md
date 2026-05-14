@@ -4,19 +4,20 @@ This document defines the absolute source of truth for the entire K3s cluster in
 
 ## 1. Infrastructure Layer (Proxmox VE)
 - **Hypervisor:** Proxmox VE 9.x
-- **Network Boundary:** SDN Zone (`localnat`) with SNAT (Subnet: `10.0.0.0/24`, Gateway: `10.0.0.1`).
+- **Network Boundary:** Dedicated SDN VNet (`k3snet`) within the `localnat` zone.
+- **Subnet:** `10.0.1.0/24` (Gateway: `10.0.1.1`, SNAT enabled).
 - **VM Provisioning:** Proxmox CLI (`qm create`, `qm clone`, Cloud-Init).
 - **Operating System:** Ubuntu 24.04 Cloud Image (`qemu-guest-agent` installed and enabled).
 
 ## 2. Node Topology
 The cluster consists of 1 Control Plane node and 3 Worker nodes.
 
-| Node Name | Role | vCPU | RAM | Disk 1 (OS) | Disk 2 (Storage) |
-|-----------|------|------|-----|-------------|------------------|
-| `k3s-master-1` | Control Plane | 2 | 4 GB | 15 GB | - |
-| `k3s-worker-1` | Worker | 2 | 8 GB | 20 GB | 100 GB (Longhorn) |
-| `k3s-worker-2` | Worker | 2 | 8 GB | 20 GB | 100 GB (Longhorn) |
-| `k3s-worker-3` | Worker | 2 | 8 GB | 20 GB | 100 GB (Longhorn) |
+| Node Name | Role | vCPU | RAM | Disk 1 (OS) | Disk 2 (Storage) | IP Address |
+|-----------|------|------|-----|-------------|------------------|------------|
+| `k3s-master-1` | Control Plane | 2 | 4 GB | 15 GB | - | `10.0.1.10` |
+| `k3s-worker-1` | Worker | 2 | 8 GB | 20 GB | 100 GB (Longhorn) | `10.0.1.11` |
+| `k3s-worker-2` | Worker | 2 | 8 GB | 20 GB | 100 GB (Longhorn) | `10.0.1.12` |
+| `k3s-worker-3` | Worker | 2 | 8 GB | 20 GB | 100 GB (Longhorn) | `10.0.1.13` |
 
 ## 3. Kubernetes Layer (K3s)
 - **Distribution:** K3s
@@ -30,7 +31,7 @@ The cluster consists of 1 Control Plane node and 3 Worker nodes.
 ## 4. Networking & Ingress (Cilium)
 - **CNI:** Cilium.
 - **Kube-Proxy Replacement:** Enabled (Strict mode).
-- **Load Balancer:** Cilium L2 Announcements (allocating IP addresses from a predefined pool in the `10.0.0.0/24` subnet).
+- **Load Balancer:** Cilium L2 Announcements (allocating IP addresses from a predefined pool in the `10.0.1.0/24` subnet, e.g., `10.0.1.200 - 10.0.1.207`).
 - **Ingress Controller:** Cilium Gateway API (replacing traditional Ingress controllers like NGINX or Traefik).
 
 ## 5. Persistent Storage (Longhorn)

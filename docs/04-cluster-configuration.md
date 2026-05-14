@@ -9,21 +9,21 @@ The `kubeconfig` file is located on the master node at `/etc/rancher/k3s/k3s.yam
 From your **local machine**, run the following command to download the file:
 
 ```bash
-scp k3sadmin@10.0.0.10:/etc/rancher/k3s/k3s.yaml ~/.kube/k3s-proxmox.yaml
+scp k3sadmin@10.0.1.10:/etc/rancher/k3s/k3s.yaml ~/.kube/k3s-proxmox.yaml
 ```
 
 ## 2. Update the Server Address
 
-By default, the `kubeconfig` file points to `127.0.0.1`. You need to update it to the master node's IP address (`10.0.0.10`).
+By default, the `kubeconfig` file points to `127.0.0.1`. You need to update it to the master node's IP address (`10.0.1.10`).
 
 Open the file on your local machine and replace:
 `server: https://127.0.0.1:6443`
 with:
-`server: https://10.0.0.10:6443`
+`server: https://10.0.1.10:6443`
 
 Or use `sed`:
 ```bash
-sed -i 's/127.0.0.1/10.0.0.10/g' ~/.kube/k3s-proxmox.yaml
+sed -i 's/127.0.0.1/10.0.1.10/g' ~/.kube/k3s-proxmox.yaml
 ```
 
 ## 3. Configure Local Environment

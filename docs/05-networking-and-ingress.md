@@ -28,7 +28,7 @@ We will install Cilium with the following configuration:
 helm install cilium cilium/cilium --version 1.16.x \
   --namespace kube-system \
   --set kubeProxyReplacement=true \
-  --set k8sServiceHost=10.0.0.10 \
+  --set k8sServiceHost=10.0.1.10 \
   --set k8sServicePort=6443 \
   --set l2announcements.enabled=true \
   --set gatewayAPI.enabled=true \
@@ -37,7 +37,7 @@ helm install cilium cilium/cilium --version 1.16.x \
 
 ## 4. Configure L2 Announcements Pool
 
-Now we define the IP pool that Cilium will use for LoadBalancer services. We will use a range from our `localnat` subnet.
+Now we define the IP pool that Cilium will use for LoadBalancer services. We will use a range from our `k3snet` subnet.
 
 Create a file named `cilium-l2-pool.yaml`:
 
@@ -48,7 +48,7 @@ metadata:
   name: local-pool
 spec:
   blocks:
-    - cidr: "10.0.0.200/29" # Range: 10.0.0.200 - 10.0.0.207
+    - cidr: "10.0.1.200/29" # Range: 10.0.1.200 - 10.0.1.207
 ---
 apiVersion: cilium.io/v2alpha1
 kind: CiliumL2AnnouncementPolicy

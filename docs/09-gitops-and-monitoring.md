@@ -1,4 +1,4 @@
-# Chapter 8: GitOps & Observability
+# Chapter 9: GitOps & Observability
 
 In the final chapter of this guide, we establish the foundations for automated application delivery and cluster monitoring. We will install **ArgoCD** for GitOps and the **External Secrets Operator (ESO)** for secure secret management.
 

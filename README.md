@@ -15,6 +15,7 @@ The guide is designed for homelab enthusiasts and professionals who want to unde
 | **Certificates** | [cert-manager v1.20.x](https://cert-manager.io) | Automated TLS certificate issuance and renewal. |
 | **GitOps** | [ArgoCD v2.14.x](https://argoproj.github.io/argo-cd) | Declarative, continuous delivery for Kubernetes. |
 | **Secrets Management** | [External Secrets](https://external-secrets.io) | Syncing secrets from external providers (ESO). |
+| **Database Operator** | [CloudNativePG v1.29.x](https://cloudnative-pg.io) | Cloud-native, HA PostgreSQL management and backups. |
 | **Automation** | Cloud-Init & `qm` CLI | Automated VM provisioning and system preparation. |
 | **Ingress/LB** | Cilium Gateway API | Modern L7 traffic management and L2 Service LB. |
 

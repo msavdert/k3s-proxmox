@@ -12,6 +12,9 @@ The guide is designed for homelab enthusiasts and professionals who want to unde
 | **Kubernetes Distro** | [K3s v1.35.x](https://k3s.io) | Production-grade, lightweight Kubernetes distribution. |
 | **Networking (CNI)** | [Cilium 1.19.x](https://cilium.io) | eBPF-based networking, security, and observability (Hubble). |
 | **Storage (CSI)** | [Longhorn 1.11.x](https://longhorn.io) | Distributed, resilient block storage for stateful applications. |
+| **Certificates** | [cert-manager v1.20.x](https://cert-manager.io) | Automated TLS certificate issuance and renewal. |
+| **GitOps** | [ArgoCD v2.14.x](https://argoproj.github.io/argo-cd) | Declarative, continuous delivery for Kubernetes. |
+| **Secrets Management** | [External Secrets](https://external-secrets.io) | Syncing secrets from external providers (ESO). |
 | **Automation** | Cloud-Init & `qm` CLI | Automated VM provisioning and system preparation. |
 | **Ingress/LB** | Cilium Gateway API | Modern L7 traffic management and L2 Service LB. |
 
@@ -26,7 +29,9 @@ The guide is designed for homelab enthusiasts and professionals who want to unde
 - [Chapter 5: Networking & Ingress (Cilium & Gateway API)](docs/05-networking-and-ingress.md)
 - [Chapter 6: Certificate Management (cert-manager)](docs/06-certificate-management.md)
 - [Chapter 7: Storage Classes (Longhorn)](docs/07-storage-classes.md)
-- [Chapter 8: GitOps & Observability (ArgoCD & ESO)](docs/08-gitops-and-monitoring.md)
+- [Chapter 8: Exposing Services (Cilium Gateway API)](docs/08-exposing-services.md)
+- [Chapter 9: GitOps & Observability (ArgoCD & ESO)](docs/09-gitops-and-monitoring.md)
+- [Chapter 10: Database Layer (CloudNativePG)](docs/10-cloudnative-pg.md)
 - [Chapter 99: Cleanup and Reset](docs/99-cleanup.md)
 
 ## 🛠️ Prerequisites

@@ -99,6 +99,21 @@ EOF
 
 ## 4. Verification
 
+### Verify HTTPRoutes
+
+Ensure that both routes are created and bound to the correct hostnames.
+
+```bash
+kubectl get httproute -A
+```
+
+Expected output:
+```text
+NAMESPACE         NAME             HOSTNAMES            AGE
+kube-system       hubble-route     ["hubble.local"]     53s
+longhorn-system   longhorn-route   ["longhorn.local"]   62s
+```
+
 ### Check Certificate Status
 Cert-manager should have detected the Gateway listener and created a secret.
 

@@ -1,0 +1,28 @@
+# Proxmox / K3s Homelab gitignore
+
+# Secrets and Tokens (NEVER COMMIT THESE)
+*.token
+*.key
+*.pem
+*.secret
+.env
+.kube/config
+
+# Local development
+.DS_Store
+*.swp
+*.tmp
+
+# Terraform (if you ever use it here)
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Log files
+*.log
+logs/
+
+# Infrastructure Specifics
+k3s.pub
+ubuntu-server-cloudimg.img
+noble-server-cloudimg-amd64.img

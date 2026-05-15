@@ -23,6 +23,7 @@ We will mount the disk to `/var/lib/longhorn` and ensure it's persistent after r
 ```bash
 sudo mkdir -p /var/lib/longhorn
 echo "/dev/sdb /var/lib/longhorn xfs defaults 0 0" | sudo tee -a /etc/fstab
+sudo systemctl daemon-reload
 sudo mount -a
 ```
 

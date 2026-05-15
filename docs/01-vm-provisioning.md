@@ -55,6 +55,7 @@ packages:
   - curl
 
 runcmd:
+  - systemctl disable systemd-networkd-wait-online.service
   - systemctl mask systemd-networkd-wait-online.service
   - systemctl enable --now qemu-guest-agent
   - systemctl enable --now iscsid
@@ -63,6 +64,9 @@ runcmd:
   - sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 EOF
 ```
+
+> [!NOTE]
+> Disabling and Masking `systemd-networkd-wait-online.service` is a specific requirement for **Ubuntu 26.04** on Proxmox. Previous LTS versions (like 22.04 and 24.04) did not suffer from this boot-time network synchronization hang. 
 
 ## 3. Create the VM Template
 

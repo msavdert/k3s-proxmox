@@ -33,6 +33,7 @@ The guide is designed for homelab enthusiasts and professionals who want to unde
 - [Chapter 8: Exposing Services (Cilium Gateway API)](docs/08-exposing-services.md)
 - [Chapter 9: GitOps & Observability (ArgoCD & ESO)](docs/09-gitops-and-monitoring.md)
 - [Chapter 10: Database Layer (CloudNativePG)](docs/10-cloudnative-pg.md)
+- [Chapter 11: Maintenance and Backup](docs/11-maintenance-and-backup.md)
 - [Chapter 99: Cleanup and Reset](docs/99-cleanup.md)
 
 ## 🛠️ Prerequisites

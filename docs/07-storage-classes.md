@@ -1,4 +1,4 @@
-# Chapter 6: Storage Classes (Longhorn)
+# Chapter 7: Storage Classes (Longhorn)
 
 In this chapter, we will configure **Longhorn** as our distributed block storage provider. This ensures that application data is replicated across nodes, allowing pods to be rescheduled without data loss.
 
@@ -42,8 +42,7 @@ We will install Longhorn in its own namespace. We are using specific flags for K
 
 ### Add Helm Repository
 ```bash
-helm repo add longhorn https://charts.longhorn.io
-helm repo update
+helm repo add longhorn https://charts.longhorn.io --force-update
 
 # Check for the latest versions
 helm search repo longhorn/longhorn -l | head -n 5

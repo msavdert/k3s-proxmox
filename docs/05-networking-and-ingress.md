@@ -13,8 +13,7 @@ curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 ## 2. Add Cilium Helm Repository
 
 ```bash
-helm repo add cilium https://helm.cilium.io/
-helm repo update
+helm repo add cilium https://helm.cilium.io/ --force-update
 
 # Check for the latest versions
 helm search repo cilium/cilium -l | head -n 5

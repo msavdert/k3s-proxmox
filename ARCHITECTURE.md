@@ -49,4 +49,4 @@ If you are an AI agent generating manifests or documentation based on this plan:
 1. Always implement the `qm` CLI commands for VM creation and disk attachment in `docs/01-vm-provisioning.md`.
 2. Ensure K3s install commands use the exact `--disable` flags listed above in `docs/02-k3s-initialization.md`.
 3. Configure Cilium with Helm using strict kube-proxy replacement, L2 announcements, and Gateway API enabled in `docs/05-networking-and-ingress.md`.
-4. Provide instructions to partition, format, and mount the 100GB secondary disk in the worker nodes before installing Longhorn in `docs/06-storage-classes.md`.
+4. Provide instructions to partition, format, and mount the 100GB secondary disk in the worker nodes before installing Longhorn in `docs/07-storage-classes.md`.

@@ -24,8 +24,9 @@ The guide is designed for homelab enthusiasts and professionals who want to unde
 - [Chapter 3: Joining K3s Worker Nodes](docs/03-k3s-worker-nodes.md)
 - [Chapter 4: Cluster Access and Configuration](docs/04-cluster-configuration.md)
 - [Chapter 5: Networking & Ingress (Cilium & Gateway API)](docs/05-networking-and-ingress.md)
-- [Chapter 6: Storage Classes (Longhorn)](docs/06-storage-classes.md)
-- [Chapter 7: GitOps & Observability (ArgoCD & ESO)](docs/07-gitops-and-monitoring.md)
+- [Chapter 6: Certificate Management (cert-manager)](docs/06-certificate-management.md)
+- [Chapter 7: Storage Classes (Longhorn)](docs/07-storage-classes.md)
+- [Chapter 8: GitOps & Observability (ArgoCD & ESO)](docs/08-gitops-and-monitoring.md)
 - [Chapter 99: Cleanup and Reset](docs/99-cleanup.md)
 
 ## 🛠️ Prerequisites

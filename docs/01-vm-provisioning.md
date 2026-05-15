@@ -45,10 +45,6 @@ chpasswd: { expire: False }
 ssh_authorized_keys:
   - <YOUR_SSH_PUBLIC_KEY_STRING>
 
-# Automatically set the hostname based on the VM Name in Proxmox
-preserve_hostname: false
-manage_etc_hosts: true
-
 package_upgrade: true
 packages:
   - qemu-guest-agent
@@ -71,7 +67,6 @@ EOF
 
 > [!NOTE]
 > Disabling and Masking `systemd-networkd-wait-online.service` is a specific requirement for **Ubuntu 26.04** on Proxmox. Previous LTS versions (like 22.04 and 24.04) did not suffer from this boot-time network synchronization hang. 
-> By setting `manage_etc_hosts: true`, Cloud-Init will automatically update the `/etc/hosts` file to match the hostname provided by the Proxmox metadata (the VM Name). This eliminates the need for manual post-provisioning steps.
 
 ## 3. Create the VM Template
 
@@ -203,9 +198,9 @@ qm set $WORKER3_ID --ipconfig0 ip=10.0.1.13/24,gw=10.0.1.1
 qm set $WORKER3_ID --tags "k3s;worker;ubuntu"
 ```
 
-## 6. Start and Initialize
+## 6. Start and Initialize Identity
 
-Once all nodes are provisioned, start them. 
+Once all nodes are provisioned, start them. We will then use the **QEMU Guest Agent** (`qm guest exec`) to set their hostnames automatically from the Proxmox host.
 
 ```bash
 # Start all VMs
@@ -219,10 +214,18 @@ qm start $WORKER3_ID
 > You can monitor the Cloud-Init progress by connecting to the serial console of the master:
 > `qm terminal $MASTER_ID`
 
----
+```bash
+# Wait 10-20 seconds for the Guest Agent to start, then set hostnames:
+qm guest exec $MASTER_ID -- hostnamectl set-hostname k3s-master-1
+qm guest exec $WORKER1_ID -- hostnamectl set-hostname k3s-worker-1
+qm guest exec $WORKER2_ID -- hostnamectl set-hostname k3s-worker-2
+qm guest exec $WORKER3_ID -- hostnamectl set-hostname k3s-worker-3
+```
 
-> [!NOTE]
-> Thanks to the `preserve_hostname: false` and `manage_etc_hosts: true` settings in our Cloud-Init snippet, each node will automatically adopt its **VM Name** (e.g., `k3s-master-1`) as its internal hostname upon first boot.
+> [!TIP]
+> Using `qm guest exec` allows us to finalize the node identity without needing to SSH into each machine manually. This is perfect for the "Hard Way" automation.
+
+---
 
 > [!IMPORTANT]
 > Ensure that the `k3snet` (SDN) is properly applied in Proxmox before starting the VMs, or they will not receive network connectivity.

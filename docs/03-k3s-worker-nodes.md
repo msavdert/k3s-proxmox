@@ -10,16 +10,8 @@ Before joining, ensure:
 
 ## 2. Join Worker Nodes
 
-### 2.1 System Preparation (Run on all Workers)
-
-Before joining the cluster, perform the same system preparation as on the master node:
-
-```bash
-# Run on k3s-worker-1, k3s-worker-2, and k3s-worker-3
-sudo ufw disable
-sudo swapoff -a
-sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
-```
+> [!NOTE]
+> System prerequisites like disabling UFW and Swap are automatically handled by the Cloud-Init configuration during the provisioning phase.
 
 ## 3. Joining the Nodes
 

@@ -31,10 +31,7 @@ sudo mount -a
 Longhorn requires several host-level utilities. We automated the installation via Cloud-Init in Chapter 1, but we must ensure the services are active on **all nodes**.
 
 ```bash
-# 1. Ensure the iSCSI daemon is running (should be enabled via Cloud-Init)
-sudo systemctl enable --now iscsid
-
-# 2. Verify all dependencies are present
+# Verify all dependencies are present (installed via Cloud-Init)
 sudo dpkg -l | grep -E "open-iscsi|nfs-common|dmsetup|jq|curl"
 ```
 

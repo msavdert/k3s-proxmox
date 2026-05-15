@@ -11,20 +11,7 @@ ssh k3sadmin@10.0.1.10
 ```
 
 > [!NOTE]
-> Your hostname should already be set to `k3s-master-1` thanks to the `qm guest exec` command we ran at the end of the previous chapter.
-
-### 1.1 System Preparation
-
-Before installing K3s, we must ensure the system meets the official requirements regarding networking and swap.
-
-```bash
-# Disable UFW (Uncomplicated Firewall) to prevent port blocking
-sudo ufw disable
-
-# Disable Swap (Recommended for Kubernetes stability)
-sudo swapoff -a
-sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
-```
+> System prerequisites like disabling UFW and Swap are now automatically handled by our Cloud-Init configuration from Chapter 1.
 
 ## 2. Install K3s (Single Master)
 

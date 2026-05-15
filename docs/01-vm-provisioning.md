@@ -4,14 +4,18 @@ This chapter covers the creation of the Virtual Machines (VMs) on Proxmox VE usi
 
 ## 1. Prepare the Ubuntu Cloud Image
 
-Log in to your Proxmox host via SSH. We will download the Ubuntu Cloud Image to our temporary workspace (`/root`). 
+Log in to your Proxmox host via SSH. Choose your preferred Ubuntu version.
 
-> [!NOTE]
-> Unlike an ISO file (which stays in `/var/lib/vz/template/iso/`), a Cloud Image is a pre-installed disk. We download it temporarily, import it into Proxmox's storage, and then delete the source file.
-
+### Option A: Ubuntu 26.04 LTS (Recommended)
 ```bash
-# Download the Ubuntu 24.04 Cloud Image
-wget https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img
+# Download the Ubuntu 26.04 Cloud Image
+wget https://cloud-images.ubuntu.com/releases/26.04/release/ubuntu-26.04-server-cloudimg-amd64.img -O ubuntu-server-cloudimg.img
+```
+
+### Option B: Ubuntu 24.04 LTS (Alternative)
+```bash
+# Use this if you prefer the 24.04 release
+wget https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img -O ubuntu-server-cloudimg.img
 ```
 
 ## 3. Create a Cloud-Init Custom Snippet
@@ -49,9 +53,14 @@ packages:
   - dmsetup
   - jq
   - curl
+
 runcmd:
+  - systemctl mask systemd-networkd-wait-online.service
   - systemctl enable --now qemu-guest-agent
   - systemctl enable --now iscsid
+  - ufw disable
+  - swapoff -a
+  - sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 EOF
 ```
 
@@ -79,14 +88,14 @@ We will create a base VM template (ID `9000`). Once the disk is imported, the so
 
 ```bash
 # Create the VM
-qm create 9000 --name ubuntu-2404-template --memory 2048 --cores 2 --net0 virtio,bridge=k3snet
+qm create 9000 --name ubuntu-template --memory 2048 --cores 2 --net0 virtio,bridge=k3snet
 
 # Enable the QEMU Guest Agent
 qm set 9000 --agent enabled=1
 
 # Import the disk into Proxmox storage
 # REPLACE 'local-zfs' with the storage Name you found in the previous step
-qm importdisk 9000 noble-server-cloudimg-amd64.img local-zfs
+qm importdisk 9000 ubuntu-server-cloudimg.img local-zfs
 
 # Attach the imported disk to the VM
 qm set 9000 --scsihw virtio-scsi-pci --scsi0 local-zfs:vm-9000-disk-0
@@ -107,7 +116,7 @@ qm set 9000 --serial0 socket --vga serial0
 qm template 9000
 
 # CLEANUP: Remove the temporary image file
-rm noble-server-cloudimg-amd64.img
+rm ubuntu-server-cloudimg.img
 ```
 
 ## 4. Provision the Control Plane Node
@@ -127,6 +136,9 @@ qm disk resize $MASTER_ID scsi0 15G
 
 # Configure node-specific Network (IP must be unique)
 qm set $MASTER_ID --ipconfig0 ip=10.0.1.10/24,gw=10.0.1.1
+
+# Add Tags for better organization
+qm set $MASTER_ID --tags "k3s;master;ubuntu"
 ```
 
 ## 5. Provision the Worker Nodes
@@ -145,6 +157,9 @@ qm disk resize $WORKER1_ID scsi0 20G
 pvesm alloc local-zfs $WORKER1_ID vm-$WORKER1_ID-disk-1 100G
 qm set $WORKER1_ID --scsi1 local-zfs:vm-$WORKER1_ID-disk-1
 qm set $WORKER1_ID --ipconfig0 ip=10.0.1.11/24,gw=10.0.1.1
+
+# Add Tags
+qm set $WORKER1_ID --tags "k3s;worker;ubuntu"
 ```
 
 ### k3s-worker-2
@@ -158,6 +173,9 @@ qm disk resize $WORKER2_ID scsi0 20G
 pvesm alloc local-zfs $WORKER2_ID vm-$WORKER2_ID-disk-1 100G
 qm set $WORKER2_ID --scsi1 local-zfs:vm-$WORKER2_ID-disk-1
 qm set $WORKER2_ID --ipconfig0 ip=10.0.1.12/24,gw=10.0.1.1
+
+# Add Tags
+qm set $WORKER2_ID --tags "k3s;worker;ubuntu"
 ```
 
 ### k3s-worker-3
@@ -171,6 +189,9 @@ qm disk resize $WORKER3_ID scsi0 20G
 pvesm alloc local-zfs $WORKER3_ID vm-$WORKER3_ID-disk-1 100G
 qm set $WORKER3_ID --scsi1 local-zfs:vm-$WORKER3_ID-disk-1
 qm set $WORKER3_ID --ipconfig0 ip=10.0.1.13/24,gw=10.0.1.1
+
+# Add Tags
+qm set $WORKER3_ID --tags "k3s;worker;ubuntu"
 ```
 
 ## 6. Start and Initialize Identity

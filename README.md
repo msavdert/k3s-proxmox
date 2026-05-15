@@ -3,6 +3,18 @@
 This repository contains a comprehensive, step-by-step guide to deploying a production-ready K3s Kubernetes cluster on Proxmox VE. 
 The guide is designed for homelab enthusiasts and professionals who want to understand the underlying mechanics of Kubernetes infrastructure provisioning, networking, and GitOps integration.
 
+## 🛠 Technology Stack (May 2026)
+
+| Component | Version | Purpose |
+| :--- | :--- | :--- |
+| **Hypervisor** | [Proxmox VE 9.1+](https://www.proxmox.com) | Bare-metal virtualization platform. |
+| **Operating System** | [Ubuntu 26.04 LTS](https://ubuntu.com) | Lightweight, modern base OS with Cloud-Init support. |
+| **Kubernetes Distro** | [K3s v1.35.x](https://k3s.io) | Production-grade, lightweight Kubernetes distribution. |
+| **Networking (CNI)** | [Cilium 1.19.x](https://cilium.io) | eBPF-based networking, security, and observability (Hubble). |
+| **Storage (CSI)** | [Longhorn 1.11.x](https://longhorn.io) | Distributed, resilient block storage for stateful applications. |
+| **Automation** | Cloud-Init & `qm` CLI | Automated VM provisioning and system preparation. |
+| **Ingress/LB** | Cilium Gateway API | Modern L7 traffic management and L2 Service LB. |
+
 ## 🚀 Roadmap and Guide Structure
 
 - [Master Architecture Blueprint](ARCHITECTURE.md)
@@ -21,10 +33,6 @@ The guide is designed for homelab enthusiasts and professionals who want to unde
 - A dedicated server or bare-metal machine (e.g., Hetzner).
 - Minimum 4 cores, 16GB RAM for a decent cluster experience.
 - Familiarity with Linux command line, SSH, and networking basics.
-
-## 🤖 AI Agent Guidelines
-
-This project is built and maintained with the help of AI agents. If you are an AI assistant working on this repository, please strictly follow the guidelines established in [`AGENTS.md`](AGENTS.md).
 
 ## 📄 License
 

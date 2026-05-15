@@ -10,18 +10,16 @@ This chapter provides instructions for completely removing the K3s cluster and a
 First, stop and remove all cluster nodes (Master and Workers). Replace the variables with your actual VM IDs if you didn't use the dynamic ones in Chapter 1.
 
 ```bash
-# Stop the VMs
-# Replace with your actual IDs (e.g., 100, 101, etc.)
-qm stop <MASTER_ID>
-qm stop <WORKER1_ID>
-qm stop <WORKER2_ID>
-qm stop <WORKER3_ID>
+# Option A: Manual cleanup (one by one)
+# Replace with your actual IDs
+qm stop <ID> && qm destroy <ID> --purge
 
-# Destroy the VMs
-qm destroy <MASTER_ID> --purge
-qm destroy <WORKER1_ID> --purge
-qm destroy <WORKER2_ID> --purge
-qm destroy <WORKER3_ID> --purge
+# Option B: Efficient cleanup using a loop
+# Example: If your VMs are IDs 105, 106, 107, and 108
+for vmid in {105..108}; do
+    echo "Cleaning up VM $vmid..."
+    qm stop $vmid && qm destroy $vmid --purge
+done
 ```
 
 ## 2. Remove the VM Template
@@ -39,9 +37,6 @@ Remove the Cloud-Init configuration files and temporary SSH keys from the Proxmo
 ```bash
 # Remove Cloud-Init snippet
 rm /var/lib/vz/snippets/k3s-cloud-init.yaml
-
-# Remove SSH public key (if still exists)
-rm k3s.pub
 
 # Remove downloaded Cloud Image (if still exists)
 rm noble-server-cloudimg-amd64.img

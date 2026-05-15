@@ -220,6 +220,12 @@ qm guest exec $MASTER_ID -- hostnamectl set-hostname k3s-master-1
 qm guest exec $WORKER1_ID -- hostnamectl set-hostname k3s-worker-1
 qm guest exec $WORKER2_ID -- hostnamectl set-hostname k3s-worker-2
 qm guest exec $WORKER3_ID -- hostnamectl set-hostname k3s-worker-3
+
+# Reboot all VMs
+for vmid in {105..108}; do
+    echo "Rebooting VM $vmid..."
+    qm reboot $vmid
+done
 ```
 
 > [!TIP]

@@ -92,7 +92,7 @@ We will create a base VM template (ID `9000`). Once the disk is imported, the so
 
 ```bash
 # Create the VM
-qm create 9000 --name ubuntu-template --memory 2048 --cores 2 --net0 virtio,bridge=k3snet
+qm create 9000 --name ubuntu-template --memory 2048 --cores 2 --cpu host --net0 virtio,bridge=k3snet
 
 # Enable the QEMU Guest Agent
 qm set 9000 --agent enabled=1
